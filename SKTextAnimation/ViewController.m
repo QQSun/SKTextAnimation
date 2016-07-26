@@ -58,7 +58,7 @@
     
     _textAnimationLabel = [[SKTextAnimationLabel alloc] init];
     _textAnimationLabel.frame = self.view.bounds;
-    _textAnimationLabel.text  = @"sit down and ask,";
+    _textAnimationLabel.text  = @"Yes Tall";
     _textAnimationLabel.font  = [UIFont systemFontOfSize:48];
     _textAnimationLabel.textColor     = [UIColor greenColor];
     _textAnimationLabel.numberOfLines = 0;

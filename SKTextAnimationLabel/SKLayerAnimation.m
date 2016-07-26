@@ -11,7 +11,7 @@
 @interface SKLayerAnimation ()
 
 @property (nonatomic, copy) completion completion;
-@property (nonatomic, strong) CALayer *textLayer;
+@property (nonatomic, strong) CALayer *layer;
 
 @end
 
@@ -19,7 +19,7 @@ static NSString *kTextAnimationGroupKey = @"textAnimationGroupKey";
 
 @implementation SKLayerAnimation
 
-+ (void)textLayerAnimation:(CALayer *)layer durationTime:(CGFloat)duration delayTime:(CGFloat)delay animation:(effectAnimatableLayer)effectAnimation completion:(completion)completion
++ (void)layerAnimation:(CALayer *)layer durationTime:(CGFloat)duration delayTime:(CGFloat)delay animation:(effectAnimatableLayer)effectAnimation completion:(completion)completion
 {
     SKLayerAnimation *layerAnimation = [[SKLayerAnimation alloc] init];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -36,7 +36,7 @@ static NSString *kTextAnimationGroupKey = @"textAnimationGroupKey";
         }
         animationGroup = [layerAnimation groupAnimationWithLayerChanges:olderLayer new:newLayer];
         if (animationGroup) {
-            layerAnimation.textLayer = layer;
+            layerAnimation.layer = layer;
             animationGroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
             animationGroup.beginTime = CACurrentMediaTime();
             animationGroup.duration = duration;
@@ -87,8 +87,7 @@ static NSString *kTextAnimationGroupKey = @"textAnimationGroupKey";
         [animations addObject:basicAnimation];
     }
     
-#warning 第二个参数可能是oldLayer.bounds
-    if (!CGRectEqualToRect(oldLayer.bounds, oldLayer.bounds)) {
+    if (!CGRectEqualToRect(oldLayer.bounds, newLayer.bounds)) {
         CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
         basicAnimation.fromValue = [NSValue valueWithCGRect:oldLayer.bounds];
         basicAnimation.toValue = [NSValue valueWithCGRect:newLayer.bounds];
@@ -115,7 +114,7 @@ static NSString *kTextAnimationGroupKey = @"textAnimationGroupKey";
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
     if (self.completion) {
-        [self.textLayer removeAnimationForKey:kTextAnimationGroupKey];
+        [self.layer removeAnimationForKey:kTextAnimationGroupKey];
         self.completion(flag);
     }
 }
